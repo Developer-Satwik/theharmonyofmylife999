@@ -103,6 +103,20 @@ const userRoutes = require('./routes/userRoutes');
 const orderRoutes = require('./routes/orders');
 const recaptchaRouter = require('./routes/recaptchaRouter');
 
+// Root route
+app.get('/', (req, res) => {
+  res.json({
+    status: 'success',
+    message: 'mujbites API is running',
+    version: '1.0.0',
+    endpoints: [
+      '/api/restaurants',
+      '/api/users',
+      '/api/orders'
+    ]
+  });
+});
+
 // Use routes
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/users', userRoutes);
