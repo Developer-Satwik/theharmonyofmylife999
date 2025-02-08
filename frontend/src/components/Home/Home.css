@@ -113,7 +113,7 @@ body, html {
   display: flex !important;
   justify-content: center !important;
   width: 100% !important;
-  max-width: 600px !important; /* Reduced from 800px */
+  max-width: 600px !important;
   padding: 0 20px !important;
   box-sizing: border-box !important;
   position: relative !important;
@@ -129,11 +129,12 @@ body, html {
   background: var(--search-bg) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
-  border-radius: 16px !important; /* Reduced from 20px */
+  border-radius: 16px !important;
   box-shadow: 0 8px 32px var(--shadow-color) !important;
   transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
   border: 1px solid rgba(255, 255, 255, 0.18) !important;
   overflow: hidden !important;
+  z-index: 10 !important;
 }
 
 .search-group:hover {
@@ -178,12 +179,14 @@ body, html {
   font-size: 1rem !important;
   font-family: var(--font-body) !important;
   letter-spacing: 0.3px !important;
+  z-index: 1!important;
 }
 
 .search-input::placeholder {
   color: #94a3b8;
   font-weight: 400;
   opacity: 0.8;
+  z-index: 1!important;
 }
 
 .search-input:focus {
@@ -208,11 +211,11 @@ body, html {
   gap: 2.5rem !important;
   width: 100% !important;
   max-width: 1400px !important;
-  margin: 0 auto !important; /* Reset margin */
+  margin: 0 auto !important;
   padding: 20px !important;
   box-sizing: border-box !important;
   position: relative !important;
-  z-index: 1 !important;
+  z-index: 5 !important;
   opacity: 1 !important;
 }
 
@@ -488,12 +491,14 @@ body, html {
   .search-container {
     padding: 0 12px !important;
     margin-top: 0.5rem !important;
+    z-index: 1!important;
   }
 
   .search-input {
     height: 44px !important;
     font-size: 0.95rem !important;
     padding: 0 1.2rem !important;
+    z-index: 1!important;
   }
 
   .restaurant-list {
@@ -541,12 +546,14 @@ body, html {
 
   .search-container {
     padding: 0 8px !important;
+    z-index: 1!important;
   }
 
   .search-input {
     height: 40px !important;
     font-size: 0.9rem !important;
     padding: 0 1rem !important;
+    z-index: 1!important;
   }
 
   .restaurant-list {
@@ -656,6 +663,7 @@ body, html {
 
   .search-container {
     padding: 0 15px;
+    z-index: 1!important;
   }
 
   .restaurant-list {
@@ -690,6 +698,7 @@ body, html {
 
   .search-container {
     padding: 0 12px;
+    z-index: 1!important;
   }
 
   .restaurant-list {
