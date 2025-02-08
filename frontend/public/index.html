@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <!-- Ensure the viewport meta tag is correctly set for mobile responsiveness -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="MUJ Bites - Food Delivery App" />
+
+  <!-- Cache-Control Meta Tags -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <!-- Open Graph Tags for Social Media -->
+  <meta property="og:title" content="MujBites" />
+  <meta property="og:description" content="Delicious Meals Delivered to you within Minutes!" />
+  <meta property="og:image" content="https://i.imghippo.com/files/rKF5706qwQ.png" />
+  <meta property="og:url" content="https://mujbites.com/" />
+
+  <!-- Font Awesome CSS (Updated to latest version) -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Manifest and Apple Touch Icon -->
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+  <!-- Google Analytics Script -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-43JQZ73T74"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'G-43JQZ73T74');
+  </script>
+
+  <!-- Title -->
+  <title>MUJ Bites</title>
+
+  <!-- Add notification related meta tags -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="MUJ Bites" />
+  <meta name="apple-mobile-web-app-title" content="MUJ Bites" />
+  <meta name="theme-color" content="#e9b50b" />
+  <meta name="msapplication-navbutton-color" content="#e9b50b" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="msapplication-starturl" content="/" />
+</head>
+<body>
+  <!-- Fallback for No JavaScript -->
+  <noscript>
+    <div style="text-align: center; padding: 20px; background-color: #f8d7da; color: #721c24;">
+      <p>JavaScript is disabled. Please enable it to experience the full functionality of MujBites.</p>
+    </div>
+  </noscript>
+
+  <!-- Root Element for React App -->
+  <div id="root"></div>
+</body>
+</html>

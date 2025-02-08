@@ -1,0 +1,150 @@
+/* Global styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  background-color: transparent;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('./background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.15;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.App {
+  text-align: center;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+  background-color: transparent;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: #282c34;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+  background-color: transparent;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Main content wrapper */
+.content-wrapper {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  width: 100%;
+  background-color: transparent;
+}
+
+/* Component containers */
+.page-container {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  width: 100%;
+  background-color: transparent;
+}
+
+/* Ensure all major containers are transparent */
+.restaurant-menu-page,
+.profile-page,
+.orders-page,
+.admin-panel,
+.restaurant-panel,
+.login-container,
+.signup-container {
+  background-color: transparent !important;
+}
+
+/* Add a semi-transparent white background to cards and content boxes */
+.menu-card,
+.order-card,
+.profile-card,
+.auth-card {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .App-logo {
+    height: 30vmin;
+  }
+
+  .App-header {
+    font-size: calc(12px + 2vmin);
+    padding: 15px;
+  }
+
+  body::before {
+    background-attachment: fixed;
+  }
+}
+
+@media (max-width: 480px) {
+  .App-logo {
+    height: 20vmin;
+  }
+
+  .App-header {
+    font-size: calc(14px + 2vmin);
+    padding: 10px;
+  }
+}
+
+/* Ensure modals and overlays don't hide the background */
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background-color: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}

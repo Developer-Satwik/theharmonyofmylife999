@@ -1,0 +1,613 @@
+/* General Page Layout */
+.page-layout {
+  display: flex;
+  font-family: 'Poppins', sans-serif;
+  background-color: transparent;
+}
+
+/* Enhanced Navbar Styles */
+.navbar {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  height: 70px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* Navbar hover effect for desktop */
+@media (min-width: 769px) {
+  .navbar {
+    width: 100px;
+    height: 90px !important;
+    flex-direction: column;
+    align-items: flex-start;
+    background: rgba(255, 255, 255, 0.92);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+
+
+  .navbar.open {
+    width: 280px;
+    height: 100vh;
+    padding: 25px;
+    border-radius: 0;
+    margin: 0;
+    left: 0;
+    right: auto;
+    overflow: visible;
+  }
+}
+
+/* Navbar open state (for mobile and manual toggle) */
+.navbar.open {
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
+  border-radius: 24px;
+  margin: 12px;
+  width: calc(100% - 24px);
+  padding: 20px;
+  min-height: fit-content;
+  height: auto;
+  overflow: visible;
+}
+
+@media (min-width: 769px) {
+  .navbar.open {
+    width: 250px;
+    height: 100vh;
+    padding: 20px;
+    border-radius: 0; /* Reset rounded corners for desktop */
+    margin: 0; /* Reset margin for desktop */
+    left: 0; /* Reset left position for desktop */
+    right: auto; /* Reset right position for desktop */
+  }
+}
+
+/* Hamburger Icon */
+.hamburger-icon {
+  cursor: pointer;
+  font-size: 1.6rem;
+  color: #1a1a1a;
+  padding: 14px;
+  position: fixed;
+  z-index: 1000;
+  left: 12px;
+  top: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.navbar.open .hamburger-icon {
+  transform: rotate(360deg);
+  background: rgba(250, 199, 68, 0.15);
+  border-color: rgba(250, 199, 68, 0.3);
+}
+
+/* Sidebar Styles */
+.sidebar {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px 0;
+  height: auto;
+  min-height: fit-content;
+}
+
+.nav-menu {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  margin-top: 65px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: auto;
+}
+
+.nav-item {
+  margin-bottom: 8px;
+  width: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Divider between menu items */
+.nav-item:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  padding-bottom: 8px;
+}
+
+.navbar.open .nav-item {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+
+/* Navbar Links */
+.nav-links {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #1a1a1a;
+  padding: 12px 16px;
+  border-radius: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-links::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(250, 199, 68, 0.1), rgba(255, 155, 68, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nav-links:hover {
+  transform: translateX(5px);
+  background: rgba(250, 199, 68, 0.08);
+  box-shadow: 0 4px 15px rgba(250, 199, 68, 0.1);
+}
+
+.nav-links:hover::before {
+  opacity: 1;
+}
+
+.nav-links.active {
+  font-weight: 600;
+  background: rgba(250, 199, 68, 0.12);
+  color: #000;
+  box-shadow: 0 4px 15px rgba(250, 199, 68, 0.12);
+}
+
+.nav-links svg {
+  font-size: 1.3rem;
+  margin-right: 12px;
+  color: #1a1a1a;
+  transition: transform 0.3s ease;
+}
+
+.nav-links:hover svg {
+  transform: scale(1.1);
+}
+
+/* Logout button pushed to the bottom */
+.nav-item:last-child {
+  margin-top: auto;
+  border-bottom: none;
+}
+
+/* Content Styles */
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  margin-left: 0;
+  transition: margin-left 0.5s ease-in-out;
+  margin-top: 80px;
+  padding-bottom: 20px;
+}
+
+@media (min-width: 769px) {
+  .content {
+    margin-left: 50px;
+  }
+
+  .content.shifted {
+    margin-left: 250px;
+  }
+}
+
+/* Header Styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+  position: relative;
+}
+
+/* Logo Styles */
+.logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -230px;
+  height: 730px;
+  width: auto;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+/* Mobile Logo Optimizations */
+@media (max-width: 768px) {
+  .logo {
+    top: -180px;
+    height: 500px;
+    width: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+}
+
+/* Extra Small Screens */
+@media (max-width: 480px) {
+  .logo {
+    top: -150px;
+    height: 400px;
+  }
+}
+
+/* Landscape Mode */
+@media (max-height: 500px) and (orientation: landscape) {
+  .logo {
+    top: -120px;
+    height: 300px;
+  }
+}
+
+/* Ensure logo doesn't overflow on very small screens */
+@media (max-width: 360px) {
+  .logo {
+    top: -130px;
+    height: 350px;
+  }
+}
+
+/* Tablets in portrait mode */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .logo {
+    top: -200px;
+    height: 600px;
+  }
+}
+
+/* Cart Icon - Desktop styles */
+.cart-icon {
+  font-size: 2rem;
+  color: #000;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 998;
+  cursor: pointer;
+}
+
+.cart-icon a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.cart-icon svg {
+  vertical-align: middle;
+  color: #000;
+}
+
+.cart-icon button {
+  background: rgba(250, 199, 68, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: none;
+  cursor: pointer;
+  padding: 12px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  width: 45px;
+  height: 45px;
+  color: white;
+  font-size: 1.3rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 10px rgba(250, 199, 68, 0.3);
+}
+
+.cart-icon button:hover {
+  background-color: rgba(230, 184, 0, 0.2);
+}
+
+/* Notification Icon */
+.notification-icon {
+  color: #000;
+  position: fixed;
+  top: 20px;
+  right: 90px;
+  z-index: 102;
+  cursor: pointer;
+  transition: none;
+}
+
+.notification-icon button {
+  background: rgba(250, 199, 68, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: none;
+  cursor: pointer;
+  padding: 12px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  width: 45px;
+  height: 45px;
+  color: white;
+  font-size: 1.3rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 10px rgba(250, 199, 68, 0.3);
+}
+
+.notification-icon button:hover {
+  background-color: rgba(230, 184, 0, 0.1);
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+.notification-dropdown {
+  background-color: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 103;
+}
+
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.notification-item small {
+  color: #666;
+  font-size: 12px;
+}
+
+.notification-item.error {
+  color: red;
+}
+
+/* Responsive Design for Phones */
+@media (max-width: 768px) {
+  .navbar {
+    height: auto;
+    min-height: 70px;
+    overflow: visible;
+    width: 0%;
+  }
+
+  .navbar:not(.open) .nav-item {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .navbar.open {
+    height: auto;
+    min-height: fit-content;
+    padding: 20px;
+    margin: 12px;
+    width: calc(100% - 74px);
+    overflow: visible;
+  }
+
+  .sidebar {
+    padding: 0;
+    height: auto;
+  }
+
+  .nav-menu {
+    margin-top: 50px;
+    width: 100%;
+    height: auto;
+  }
+
+  .nav-item {
+    margin-bottom: 8px;
+    height: auto;
+  }
+
+  .content {
+    margin-top: 90px;
+  }
+
+  .logo {
+    top: -240px;
+    height: 650px;
+    width: 650px;
+    left: 54%;
+    transform: translateX(-50%);
+  }
+
+  .hamburger-icon {
+    font-size: 1.7rem;
+    color: #333333;
+    padding: 13px;
+    padding-bottom: 3px;
+    background-color: transparent;
+    padding-top: 10px;
+    position: fixed; /* Ensure it stays fixed */
+    z-index: 1000; /* Higher z-index to stay above everything */
+    left: 10px; /* Adjust left position */
+    top: 10px; /* Adjust top position */
+    cursor: pointer;
+  }
+
+  /* Adjust cart and notification icons for mobile */
+  .cart-icon {
+    font-size: 1.5rem;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    z-index: 999;
+  }
+
+  .cart-icon button {
+    width: auto;
+    height: auto;
+    padding: 10px;
+    border-radius: 4px; /* Changed to square shape */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(230, 184, 0, 0.1);
+    transition: background-color 0.2s ease;
+    min-width: 40px; /* Minimum width to ensure visibility */
+  }
+
+  .cart-icon button:hover {
+    background-color: rgba(230, 184, 0, 0.2);
+  }
+
+  .notification-icon {
+    font-size: 1.5rem;
+    position: fixed;
+    top: 20px;
+    right: 70px;
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    z-index: 999;
+  }
+
+  .notification-icon button {
+    width: auto;
+    height: auto;
+    padding: 10px;
+    border-radius: 4px; /* Changed to square shape */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(230, 184, 0, 0.1);
+    transition: background-color 0.2s ease;
+    min-width: 40px; /* Minimum width to ensure visibility */
+  }
+
+  .notification-icon button:hover {
+    background-color: rgba(230, 184, 0, 0.2);
+  }
+
+  .notification-dropdown {
+    width: 280px;
+    right: 10px;
+    top: 60px;
+  }
+
+  .navbar.open .notification-icon,
+  .navbar.open .cart-icon {
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+}
+
+/* Notification Header */
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.notification-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.clear-all-button {
+  background: none;
+  border: none;
+  color: #e6b800;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.clear-all-button:hover {
+  background-color: rgba(230, 184, 0, 0.1);
+}
+
+.clear-all-button:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Add this to Navbar.css */
+.notification-icon-restaurant {
+  right: 20px !important; /* Move the notification icon to the right where the cart icon usually is */
+}
