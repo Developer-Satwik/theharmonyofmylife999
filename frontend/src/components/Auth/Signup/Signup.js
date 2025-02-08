@@ -74,30 +74,11 @@ function Signup({ onSignup }) {
 
     try {
       setIsLoading(true);
-      const phoneNumber = `+91${formData.mobileNumber}`; // Add country code for India
+      const phoneNumber = `+91${formData.mobileNumber}`;
       
-      // Add a container for the reCAPTCHA if it doesn't exist
-      if (!document.getElementById('phone-verify-recaptcha')) {
-        const container = document.createElement('div');
-        container.id = 'phone-verify-recaptcha';
-        container.style.cssText = `
-          position: fixed;
-          bottom: 20px;
-          right: 20px;
-          z-index: 2147483647;
-          background: white;
-          padding: 10px;
-          border-radius: 4px;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        `;
-        document.body.appendChild(container);
-      }
-      
-      const confirmationResult = await sendPhoneVerificationCode(phoneNumber);
-      if (confirmationResult) {
-        setShowVerificationInput(true);
-        showPopupMessage("Verification code sent! Please check your phone.", "success");
-      }
+      await sendPhoneVerificationCode(phoneNumber);
+      setShowVerificationInput(true);
+      showPopupMessage("Verification code sent! Please check your phone.", "success");
     } catch (error) {
       console.error("Error sending verification code:", error);
       let errorMessage = "Failed to send verification code. Please try again.";
@@ -110,6 +91,10 @@ function Signup({ onSignup }) {
         errorMessage = "Phone authentication is not enabled. Please contact support.";
       } else if (error.code === 'auth/network-request-failed') {
         errorMessage = "Network error. Please check your connection and try again.";
+      } else if (error.code === 'auth/cancelled-popup-request') {
+        errorMessage = "Verification was cancelled. Please try again.";
+      } else if (error.code === 'auth/popup-closed-by-user') {
+        errorMessage = "Verification window was closed. Please try again.";
       }
       
       showPopupMessage(errorMessage, "error");
