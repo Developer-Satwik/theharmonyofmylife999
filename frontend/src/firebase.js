@@ -216,85 +216,60 @@ export const sendPhoneVerificationCode = async (phoneNumber) => {
     if (!/^\+91\d{10}$/.test(formattedPhoneNumber)) {
       throw new Error('Invalid phone number format. Please enter a valid 10-digit Indian phone number.');
     }
-    
+
+    // Clear existing verifier if it exists
     if (window.recaptchaVerifier) {
       try {
         await window.recaptchaVerifier.clear();
-        window.recaptchaVerifier = null;
       } catch (e) {
         console.warn('Error clearing existing verifier:', e);
       }
+      window.recaptchaVerifier = null;
     }
 
+    // Remove existing container if it exists
     const existingContainer = document.getElementById('phone-verify-recaptcha');
     if (existingContainer) {
       existingContainer.remove();
     }
 
+    // Create new container
     const containerHtml = `
-      <div id="phone-verify-recaptcha" 
-           style="position: fixed; 
-                  bottom: 20px; 
-                  right: 20px; 
-                  z-index: 2147483647;
-                  min-width: 302px;
-                  min-height: 76px;
-                  background: rgba(255, 255, 255, 0.95);
-                  border-radius: 4px;
-                  box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-      </div>
+      <div id="phone-verify-recaptcha"></div>
     `;
-    
     document.body.insertAdjacentHTML('beforeend', containerHtml);
 
-    if (document.readyState !== 'complete') {
-      await new Promise(resolve => {
-        window.addEventListener('load', resolve, { once: true });
-      });
-    }
-    
+    // Initialize RecaptchaVerifier
     window.recaptchaVerifier = new RecaptchaVerifier(auth, 'phone-verify-recaptcha', {
       size: 'normal',
-      callback: () => {},
+      callback: (response) => {
+        // reCAPTCHA solved, allow signInWithPhoneNumber.
+        console.log('reCAPTCHA verified');
+      },
       'expired-callback': () => {
-        if (window.recaptchaVerifier) {
-          window.recaptchaVerifier.clear();
-          window.recaptchaVerifier = null;
-        }
+        // Response expired. Ask user to solve reCAPTCHA again.
+        console.log('reCAPTCHA expired');
+        throw new Error('reCAPTCHA expired. Please try again.');
       }
     });
 
+    // Render the reCAPTCHA widget
     await window.recaptchaVerifier.render();
 
-    try {
-      const confirmationResult = await signInWithPhoneNumber(
-        auth, 
-        formattedPhoneNumber, 
-        window.recaptchaVerifier
-      );
-      
-      window.confirmationResult = confirmationResult;
-      return confirmationResult;
-    } catch (verificationError) {
-      console.error('Error in signInWithPhoneNumber:', verificationError);
-      if (verificationError.code === 'auth/invalid-phone-number') {
-        throw new Error('The phone number is invalid. Please check the number and try again.');
-      } else if (verificationError.code === 'auth/quota-exceeded') {
-        throw new Error('SMS quota exceeded. Please try again later.');
-      } else if (verificationError.code === 'auth/too-many-requests') {
-        throw new Error('Too many requests. Please try again later.');
-      } else if (verificationError.code === 'auth/invalid-app-credential') {
-        throw new Error('Please complete the reCAPTCHA verification before requesting the code.');
-      } else if (verificationError.code === 'auth/app-not-authorized') {
-        throw new Error('This app is not authorized to use Firebase Authentication. Please check your Firebase project configuration.');
-      } else {
-        throw verificationError;
-      }
-    }
+    // Send verification code
+    const confirmationResult = await signInWithPhoneNumber(
+      auth,
+      formattedPhoneNumber,
+      window.recaptchaVerifier
+    );
+
+    // Store the confirmation result
+    window.confirmationResult = confirmationResult;
+    return confirmationResult;
 
   } catch (error) {
     console.error('Error in phone verification:', error);
-    
+    // Clean up on error
     if (window.recaptchaVerifier) {
       try {
         await window.recaptchaVerifier.clear();
@@ -302,10 +277,6 @@ export const sendPhoneVerificationCode = async (phoneNumber) => {
         console.warn('Error clearing verifier:', e);
       }
       window.recaptchaVerifier = null;
-    }
-    const container = document.getElementById('phone-verify-recaptcha');
-    if (container) {
-      container.remove();
     }
     throw error;
   }
@@ -315,24 +286,9 @@ export const sendPhoneVerificationCode = async (phoneNumber) => {
 export const verifyPhoneCode = async (verificationCode) => {
   try {
     if (!window.confirmationResult) {
-      throw new Error('No verification in progress. Please request a new code.');
+      throw new Error('Please send verification code first');
     }
-    
     const result = await window.confirmationResult.confirm(verificationCode);
-    
-    if (window.recaptchaVerifier) {
-      try {
-        await window.recaptchaVerifier.clear();
-      } catch (e) {
-        console.warn('Error clearing verifier:', e);
-      }
-      window.recaptchaVerifier = null;
-    }
-    const container = document.getElementById('phone-verify-recaptcha');
-    if (container) {
-      container.remove();
-    }
-    
     return result;
   } catch (error) {
     console.error('Error verifying code:', error);

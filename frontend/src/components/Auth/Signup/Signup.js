@@ -76,10 +76,27 @@ function Signup({ onSignup }) {
       setIsLoading(true);
       const phoneNumber = `+91${formData.mobileNumber}`; // Add country code for India
       
+      // Add a container for the reCAPTCHA if it doesn't exist
+      if (!document.getElementById('phone-verify-recaptcha')) {
+        const container = document.createElement('div');
+        container.id = 'phone-verify-recaptcha';
+        container.style.cssText = `
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          z-index: 2147483647;
+          background: white;
+          padding: 10px;
+          border-radius: 4px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        `;
+        document.body.appendChild(container);
+      }
+      
       const confirmationResult = await sendPhoneVerificationCode(phoneNumber);
       if (confirmationResult) {
         setShowVerificationInput(true);
-        showPopupMessage("Verification code sent!", "success");
+        showPopupMessage("Verification code sent! Please check your phone.", "success");
       }
     } catch (error) {
       console.error("Error sending verification code:", error);
@@ -95,7 +112,7 @@ function Signup({ onSignup }) {
         errorMessage = "Network error. Please check your connection and try again.";
       }
       
-      showPopupMessage(errorMessage);
+      showPopupMessage(errorMessage, "error");
     } finally {
       setIsLoading(false);
     }
@@ -103,7 +120,7 @@ function Signup({ onSignup }) {
 
   const handleVerifyCode = async () => {
     if (!verificationCode || verificationCode.length !== 6) {
-      showPopupMessage("Please enter a valid 6-digit verification code");
+      showPopupMessage("Please enter a valid 6-digit verification code", "error");
       return;
     }
 
@@ -114,10 +131,16 @@ function Signup({ onSignup }) {
         setIsPhoneVerified(true);
         showPopupMessage("Phone number verified successfully!", "success");
         setShowVerificationInput(false);
+        
+        // Clean up reCAPTCHA container
+        const container = document.getElementById('phone-verify-recaptcha');
+        if (container) {
+          container.remove();
+        }
       }
     } catch (error) {
       console.error("Error verifying code:", error);
-      showPopupMessage(error.message || "Invalid verification code. Please try again.");
+      showPopupMessage("Invalid verification code. Please try again.", "error");
     } finally {
       setIsLoading(false);
     }
