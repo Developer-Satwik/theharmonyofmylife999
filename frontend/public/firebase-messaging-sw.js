@@ -4,17 +4,33 @@
 importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
 
-// Initialize the Firebase app in the service worker by passing in
-// your app's Firebase config object.
-firebase.initializeApp({
-  apiKey: "AIzaSyATEOT6lCGqcqS1wLnGsI92E0RBhUyNPK8",
-  authDomain: "mujbites-58abc.firebaseapp.com",
-  projectId: "mujbites-58abc",
-  storageBucket: "mujbites-58abc.firebasestorage.app",
-  messagingSenderId: "494002299863",
-  appId: "1:494002299863:web:c184c44f41841e447ca192",
-  measurementId: "G-C4M6X7F7P6"
+let firebaseApp = null;
+
+// Listen for messages from the main app
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'FIREBASE_CONFIG') {
+    // Initialize Firebase with the received config
+    if (!firebaseApp) {
+      firebaseApp = firebase.initializeApp(event.data.config);
+      console.log('Firebase initialized in service worker with config');
+    }
+  }
 });
+
+// Initialize Firebase with default config if not initialized through message
+if (!firebaseApp) {
+  const firebaseConfig = {
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID,
+    measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
+  };
+  
+  firebaseApp = firebase.initializeApp(firebaseConfig);
+}
 
 // Retrieve an instance of Firebase Messaging so that it can handle background messages.
 const messaging = firebase.messaging();
