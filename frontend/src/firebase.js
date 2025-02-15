@@ -135,7 +135,14 @@ const sendTokenToBackend = async (token) => {
         platform: 'web',
         deviceInfo: {
           userAgent: navigator.userAgent,
-          platform: navigator.platform
+          platform: navigator.platform,
+          source: 'website',  // Indicate this is from the website
+          browserInfo: {
+            userAgent: navigator.userAgent,
+            language: navigator.language,
+            platform: navigator.platform,
+            vendor: navigator.vendor
+          }
         }
       }),
     });

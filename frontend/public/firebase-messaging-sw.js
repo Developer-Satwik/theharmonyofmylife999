@@ -50,57 +50,119 @@ self.addEventListener('activate', (event) => {
 messaging.onBackgroundMessage((payload) => {
   console.log('Received background message:', payload);
 
+  // Handle cross-platform notification data
+  const notificationData = payload.data || {};
+  const notificationType = notificationData.type || 'general';
+  
+  // Determine notification icon based on type
+  let icon = '/logo192.png';
+  if (notificationData.icon) {
+    icon = notificationData.icon;
+  } else if (notificationType.includes('ORDER')) {
+    icon = '/order-icon.png';
+  }
+
   const notificationOptions = {
-    body: payload.notification.body,
-    icon: payload.notification.icon || '/logo192.png',
+    body: payload.notification?.body || notificationData.message || 'New notification',
+    icon: icon,
     badge: '/logo192.png',
-    tag: payload.data?.type || 'general',
-    data: payload.data,
+    tag: `${notificationType}_${notificationData.orderId || Date.now()}`,
+    data: {
+      url: notificationData.url || '/',
+      type: notificationType,
+      orderId: notificationData.orderId,
+      source: 'website',
+      ...notificationData
+    },
     requireInteraction: true,
-    actions: [
-      {
-        action: 'open',
-        title: 'View Details'
-      }
-    ]
+    renotify: true,
+    vibrate: [200, 100, 200],
+    actions: []
   };
 
+  // Add actions based on notification type
+  switch (notificationType) {
+    case 'ORDER_PLACED':
+      notificationOptions.actions = [
+        { action: 'view', title: 'View Order' },
+        { action: 'track', title: 'Track Order' }
+      ];
+      break;
+    case 'ORDER_CONFIRMED':
+    case 'ORDER_READY':
+      notificationOptions.actions = [
+        { action: 'track', title: 'Track Order' },
+        { action: 'directions', title: 'Get Directions' }
+      ];
+      break;
+    case 'ORDER_COMPLETED':
+      notificationOptions.actions = [
+        { action: 'review', title: 'Rate Order' },
+        { action: 'reorder', title: 'Order Again' }
+      ];
+      break;
+    default:
+      notificationOptions.actions = [{ action: 'view', title: 'View Details' }];
+  }
+
   return self.registration.showNotification(
-    payload.notification.title,
+    payload.notification?.title || notificationData.title || 'MujBites Notification',
     notificationOptions
   );
 });
 
-// Handle notification clicks
+// Handle notification clicks with enhanced navigation
 self.addEventListener('notificationclick', (event) => {
   console.log('Notification clicked:', event);
   
-  // Close the notification
   event.notification.close();
-
-  // Get the notification data
   const data = event.notification.data;
+  const action = event.action;
+
+  // Handle different action clicks
+  let targetUrl = '/';
+  if (data?.orderId) {
+    switch (action) {
+      case 'view':
+      case 'track':
+        targetUrl = `/orders/${data.orderId}`;
+        break;
+      case 'directions':
+        targetUrl = `/orders/${data.orderId}/directions`;
+        break;
+      case 'review':
+        targetUrl = `/orders/${data.orderId}/review`;
+        break;
+      case 'reorder':
+        targetUrl = `/reorder/${data.orderId}`;
+        break;
+      default:
+        targetUrl = data.url || `/orders/${data.orderId}`;
+    }
+  } else {
+    targetUrl = data?.url || '/';
+  }
   
-  // Handle click action
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
-        // If a window is already open, focus it and navigate
+        // Try to find an existing window and focus it
         for (const client of clientList) {
           if (client.url && 'focus' in client) {
             client.focus();
-            if (data?.url) {
-              client.navigate(data.url);
+            if (targetUrl) {
+              return client.navigate(targetUrl);
             }
             return;
           }
         }
-        // If no window is open, open a new one
-        if (data?.url) {
-          clients.openWindow(data.url);
-        } else {
-          clients.openWindow('/');
+        // If no window exists, open a new one
+        if (clients.openWindow) {
+          return clients.openWindow(targetUrl);
         }
+      })
+      .catch(error => {
+        console.error('Error handling notification click:', error);
       })
   );
 }); 
